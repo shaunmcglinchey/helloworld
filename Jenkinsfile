@@ -3,9 +3,9 @@ node {
 	checkout scm
 
 	stage('nodejs'){
-		def nodejs = docker.image('node')
-		nodejs.inside {
-			sh("node --version")
+		def buildEnv = docker.build('hellokapow')
+		buildEnv.inside {
+		   echo "inside kapow build env"
 		}
 	}
 }
