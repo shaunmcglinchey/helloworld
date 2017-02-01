@@ -1,11 +1,9 @@
 node {
-	stage 'Checkout'
+    stage "Checkout'
 	checkout scm
-
-	stage('nodejs'){
-		def buildEnv = docker.build('hellokapow')
-		buildEnv.inside {
-		   echo "inside kapow build env"
-		}
+	def buildEnvironment = docker.build 'hellokapow'
+	
+	buildEnvironment.inside {
+	    echo "inside kapow build env"
 	}
 }
