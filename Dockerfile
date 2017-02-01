@@ -1,5 +1,12 @@
-# Set the base image to Cent OS v. 7
-FROM centos:7
+# Set the base image to Ubuntu 14.04
+FROM ubuntu:14.04
+
+RUN apt-get update
+
+# Install java7
+RUN apt-get install -y software-properties-common \
+    && add-apt-repository -y ppa:webupd8team/java \
+    && apt-get update
 
 # update the yum
 RUN yum -y update
@@ -12,4 +19,4 @@ ADD jdk-8u121-linux-x64.rpm /home/jenkins/
 # install java to /usr/java/jdk1.8.0_91/jre/bin/java
 RUN yum -y localinstall /home/jenkins/jdk-8u121-linux-x64.rpm
 # Now JDK was installed at /usr/java/jdk1.8.0_91/ and linked from /usr/bin/java
-RUN java -version 
+RUN java -version
