@@ -8,7 +8,7 @@ RUN apt-get install unzip
 # install gradle
 ADD gradle-3.3-bin.zip /home/jenkins/
 RUN unzip /home/jenkins/gradle-3.3-bin.zip -d /home/jenkins/
-RUN chown -R battlecat /home/jenkins/gradle-3.3
+#RUN chown -R battlecat /home/jenkins/gradle-3.3
 
 # Install java7
 RUN apt-get install -y software-properties-common \
