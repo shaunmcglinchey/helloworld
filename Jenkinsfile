@@ -1,2 +1,3 @@
-node("docker") {
+node {
+	stage "Prepare environment"
 }
