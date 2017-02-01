@@ -9,6 +9,6 @@ node {
 
 	buildEnv.inside {
 	    echo 'inside kapow build env'
-      sh 'gradle clean assembleDebug'
+      sh 'gradle -v'
 	}
 }

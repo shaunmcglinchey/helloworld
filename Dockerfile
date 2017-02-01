@@ -18,8 +18,6 @@ RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 \
     select true | /usr/bin/debconf-set-selections
 RUN apt-get install -y oracle-java7-installer
 
-RUN apt-get install gradle
-
 # Install Deps
 RUN dpkg --add-architecture i386 && apt-get update \
     && apt-get install -y --force-yes expect wget \
@@ -33,7 +31,8 @@ RUN cd /opt && wget --output-document=android-sdk.tgz \
 
 # Setup environment
 ENV ANDROID_HOME /opt/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+ENV GRADLE_HOME /home/jenkins/gradle-3.3
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:$GRADLE_HOME/bin
 
 # Install sdk elements
 COPY tools /opt/tools
