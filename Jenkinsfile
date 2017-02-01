@@ -9,6 +9,6 @@ node {
 
 	buildEnvironment.inside {
 	    echo "inside kapow build env"
-      sh './gradlew clean build'
+      sh './gradle clean build'
 	}
 }
