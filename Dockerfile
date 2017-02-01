@@ -2,6 +2,11 @@ FROM ubuntu:14.04
 
 RUN apt-get update
 
+# install gradle
+ADD gradle-3.3-bin.zip /home/jenkins/
+RUN unzip /home/jenkins/gradle-3.3-bin.zip -d /home/jenkins/
+RUN chown -R jenkins /home/jenkins/gradle-3.3
+
 # Install java7
 RUN apt-get install -y software-properties-common \
     && add-apt-repository -y ppa:webupd8team/java \
