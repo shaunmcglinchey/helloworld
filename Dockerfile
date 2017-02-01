@@ -16,7 +16,7 @@ RUN dpkg --add-architecture i386 && apt-get update \
     libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1
 
 # Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz --quiet \
+RUN cd /opt && wget --output-document=android-sdk.tgz \
     http://dl.google.com/android/android-sdk_r24.3.3-linux.tgz \
     && tar xzf android-sdk.tgz && rm -f android-sdk.tgz \
     && chown -R root.root android-sdk-linux
