@@ -1,3 +1,8 @@
 node {
-	stage "Prepare environment"
+	stage('nodejs'){
+		def nodejs = docker.image('node')
+		nodejs.inside {
+			sh("node --version")
+		}
+	}
 }
