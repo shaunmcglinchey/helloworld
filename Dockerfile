@@ -2,6 +2,9 @@ FROM ubuntu:14.04
 
 RUN apt-get update
 
+# install unzip
+RUN apt-get unzip
+
 # install gradle
 ADD gradle-3.3-bin.zip /home/jenkins/
 RUN unzip /home/jenkins/gradle-3.3-bin.zip -d /home/jenkins/
