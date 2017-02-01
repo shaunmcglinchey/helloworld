@@ -1,6 +1,7 @@
 node {
-    stage "Checkout'
+    stage "Checkout"
 	checkout scm
+    stage "Build"
 	def buildEnvironment = docker.build 'hellokapow'
 	
 	buildEnvironment.inside {
