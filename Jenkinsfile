@@ -5,10 +5,10 @@ node {
     stage "Checkout"
 	checkout scm
     stage "Build"
-	def buildEnvironment = docker.build 'hellokapow'
+	def buildEnv = docker.build 'hellokapow'
 
-	buildEnvironment.inside {
-	    echo "inside kapow build env"
-      sh './gradlew assembleDebug'
+	buildEnv.inside {
+	    echo 'inside kapow build env'
+      sh './gradlew clean assembleDebug'
 	}
 }
