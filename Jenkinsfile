@@ -1,4 +1,7 @@
 node {
+    def workspace = pwd()
+    echo "\u2600 workspace=${workspace}"
+
     stage "Checkout"
 	checkout scm
     stage "Build"
