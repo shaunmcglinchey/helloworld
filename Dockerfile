@@ -6,7 +6,7 @@ RUN apt-get update
 RUN apt-get install unzip
 
 # install gradle
-// Not necessary -- include gradle wrapper in project source
+# Not necessary -- include gradle wrapper in project source
 ADD gradle-3.3-bin.zip /opt
 RUN cd /opt && unzip gradle-3.3-bin.zip && rm gradle-3.3-bin.zip
 
