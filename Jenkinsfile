@@ -6,6 +6,6 @@ node {
 
 	buildEnv.inside {
 	    echo 'inside my-env build env'
-      sh 'gradle clean assembleDebug'
+      sh './gradlew clean assembleDebug'
 	}
 }
