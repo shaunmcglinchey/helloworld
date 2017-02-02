@@ -1,56 +1,50 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 
-RUN apt-get update
-
-# install unzip
-RUN apt-get install unzip
+# support multiarch: i386 architecture
+# install Java
+# install essential tools
+# install Qt
+RUN dpkg --add-architecture i386 && \
+    apt-get update -y && \
+    apt-get install -y libncurses5:i386 libc6:i386 libstdc++6:i386 lib32gcc1 lib32ncurses5 lib32z1 zlib1g:i386 && \
+    apt-get install -y --no-install-recommends openjdk-8-jdk && \
+    apt-get install -y git wget zip && \
+    apt-get install -y qt5-default
 
 # install gradle
-# Not necessary -- include gradle wrapper in project source
-ADD gradle-3.3-bin.zip /opt
-RUN cd /opt && unzip gradle-3.3-bin.zip && rm gradle-3.3-bin.zip
+COPY gradle-3.3-bin.zip /opt
+RUN cd /opt && unzip gradle-3.3-bin.zip && mv gradle-3.3 gradle && rm gradle-3.3-bin.zip
 
-#RUN chown -R battlecat /home/jenkins/gradle-3.3
+# install Android SDK
+RUN mkdir -p /opt/android-sdk
 
-# Install java7
-RUN apt-get install -y software-properties-common \
-    && add-apt-repository -y ppa:webupd8team/java \
-    && apt-get update
-RUN echo oracle-java7-installer shared/accepted-oracle-license-v1-1 \
-    select true | /usr/bin/debconf-set-selections
-RUN apt-get install -y oracle-java7-installer
+# add the Android SDK
+#COPY android-sdk /opt/android-sdk
 
-# Install Deps
-RUN dpkg --add-architecture i386 && apt-get update \
-    && apt-get install -y --force-yes expect wget \
-    libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1
+COPY tools_r25.2.3-linux.zip /opt/android-sdk
+RUN cd /opt/android-sdk && unzip tools_r25.2.3-linux.zip && rm -f tools_r25.2.3-linux.zip
 
-# Install Android SDK
-# RUN cd /opt && wget --output-document=android-sdk.tgz \
-  #  http://dl.google.com/android/android-sdk_r24.3.3-linux.tgz \
-  #  && tar xzf android-sdk.tgz && rm -f android-sdk.tgz \
-  #  && chown -R root.root android-sdk-linux
 
-#ADD tools_r25.2.3-linux.zip /opt
-#RUN unzip tools_r25.2.3-linux.zip
-#RUN rm -f tools_r25.2.3-linux.zip
+# set the environment variables
+ENV ANDROID_SDK_VERSION=r25.2.3 \
+    ANDROID_BUILD_TOOLS_VERSION=24.0.2 \
+    ANDROID_API_LEVELS=android-25 \
+    JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
+    GRADLE_HOME=/opt/gradle \
+    ANDROID_HOME=/opt/android-sdk
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools/bin:${GRADLE_HOME}/bin
 
-# Setup environment
-#ENV ANDROID_HOME /opt/android-sdk-linux
-
-#ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-
-# ENV GRADLE_HOME /home/jenkins/gradle-3.3:$GRADLE_HOME/bin
+# accept the license agreements of the SDK components
+RUN export ANDROID_LICENSES="$ANDROID_HOME/licenses" && \
+    [ -d $ANDROID_LICENSES ] || mkdir $ANDROID_LICENSES && \
+    [ -f $ANDROID_LICENSES/android-sdk-license ] || echo 8933bad161af4178b1185d1a37fbf41ea5269c55 > $ANDROID_LICENSES/android-sdk-license && \
+    [ -f $ANDROID_LICENSES/android-sdk-preview-license ] || echo 84831b9409646a918e30573bab4c9c91346d8abd > $ANDROID_LICENSES/android-sdk-preview-license && \
+    [ -f $ANDROID_LICENSES/intel-android-extra-license ] || echo d975f751698a77b662f1254ddbeed3901e976f5a > $ANDROID_LICENSES/intel-android-extra-license && \
+    unset ANDROID_LICENSES
 
 # Install sdk elements
-#COPY tools /opt/tools
-#ENV PATH ${PATH}:/opt/tools
-#RUN ["/opt/tools/android-accept-licenses.sh", \
-#    "android update sdk --all --force --no-ui --filter platform-tools,tools,build-tools-23,build-tools-23.0.2,android-23,addon-google_apis_x86-google-23,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services,sys-img-armeabi-v7a-android-23"]
-
-# Cleaning
-#RUN apt-get clean
+RUN echo y | android update sdk --no-ui -a --filter tools,platform-tools,${ANDROID_API_LEVELS},build-tools-${ANDROID_BUILD_TOOLS_VERSION},extra-android-support,extra-android-m2repository,extra-google-m2repository
 
 # Go to workspace
-#RUN mkdir -p /opt/workspace
-#WORKDIR /opt/workspace
+RUN mkdir -p /opt/workspace
+WORKDIR /opt/workspace
